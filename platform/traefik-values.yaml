@@ -1,0 +1,11 @@
+providers:
+  kubernetesIngress:
+    enabled: true
+    ingressClass: traefik
+service:
+  type: LoadBalancer
+logs:
+  general:
+    level: DEBUG
+  access:
+    enabled: true

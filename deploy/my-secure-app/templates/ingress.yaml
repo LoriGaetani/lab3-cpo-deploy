@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-secure-app
+  # Il namespace verrà iniettato in automatico da Helm, ma è prassi comune
+  # lasciarlo o usare {{ .Release.Namespace }}
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: local.cpo.it  # Usa il dominio locale che abbiamo configurato nel file hosts
+      http:
+        paths:
+          # Regola per il Backend (deve venire PRIMA della root / )
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: my-secure-app-app-chart-backend  # Assicurati che questo sia il nome esatto del tuo Service backend
+                port:
+                  number: 8080  # Controlla che il Service backend usi questa porta (in alcuni casi potrebbe essere 80)
+
+          # Regola per il Frontend
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: my-secure-app-app-chart-frontend # Assicurati che questo sia il nome esatto del tuo Service frontend
+                port:
+                  number: 80
