@@ -31,6 +31,36 @@ spec:
               port: http
             periodSeconds: 10
             failureThreshold: 3
+          env:
+            # 1. Attiviamo il profilo Postgres per Spring Boot
+            - name: SPRING_PROFILES_ACTIVE
+              value: "postgres"
+
+            # 2. Indirizzo del servizio primario di CloudNativePG
+            - name: DB_HOST
+              value: "my-secure-app-cluster-rw"
+
+            # 3. Porta standard di Postgres
+            - name: DB_PORT
+              value: "5432"
+
+            # 4. Nome del database (quello creato da initdb)
+            - name: DB_NAME
+              value: "taskdb"
+
+            # 5. Nome utente (di default l'operatore crea l'utente "app")
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: my-secure-app-cluster-app
+                  key: username
+
+            # 6. La password presa dal Secret (il ponte di cui parlavamo)
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: my-secure-app-cluster-app  # Assicurati che questo nome corrisponda a quello generato dall'operatore
+                  key: password
 
           livenessProbe:
             httpGet:

@@ -18,3 +18,23 @@ backend:
   service:
     type: ClusterIP
     port: 8080
+
+# Configurazione della dipendenza CloudNativePG
+cluster:
+  enabled: true
+  type: postgresql
+  mode: standalone
+  version:
+    postgresql: '16'
+  cluster:
+    enableSuperuserAccess: true #crea lutente 'amministratore supremo
+    initdb:
+      database: taskdb #quando parte crea un db vuoto <taskdb>
+    monitoring:
+      enabled: false #non esportiamo le metriche su prometheus per il test
+    instances: 1 #in produzione metto 3. viene creata un nodo Primary e due repliche
+                 #Standby che si mantengono sincronizzate.
+    annotations:
+      helm.sh/resource-policy: keep #misura di sicurezza che dice che se per sbaglio qualcuno cancella il db, i dati non vanno persi perchè i volumi rimangono.
+    backups:
+      enabled: false #se volessi abilitarlo dovrei specificargli la configurazione dell'object store dove salvare i WAL.
