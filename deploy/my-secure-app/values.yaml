@@ -2,23 +2,21 @@
 frontend:
   replicaCount: 1
   image:
-    repository: lorenzogaetani/lab3-cpo-frontend
-    tag: 0.0.1
+    repository: docker.io/lorenzogaetani/frontend
+    tag: 9.0.0
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
     port: 80
-
 backend:
   replicaCount: 1
   image:
-    repository: lorenzogaetani/lab3-cpo-backend
-    tag: 0.0.1
+    repository: docker.io/lorenzogaetani/backend
+    tag: 9.0.0
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
     port: 8080
-
 # Configurazione della dipendenza CloudNativePG
 cluster:
   enabled: true
@@ -33,7 +31,7 @@ cluster:
     monitoring:
       enabled: false #non esportiamo le metriche su prometheus per il test
     instances: 1 #in produzione metto 3. viene creata un nodo Primary e due repliche
-                 #Standby che si mantengono sincronizzate.
+    #Standby che si mantengono sincronizzate.
     annotations:
       helm.sh/resource-policy: keep #misura di sicurezza che dice che se per sbaglio qualcuno cancella il db, i dati non vanno persi perchè i volumi rimangono.
     backups:
